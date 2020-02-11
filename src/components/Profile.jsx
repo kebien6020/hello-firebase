@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import * as firebase from 'firebase/app'
+import { useHistory } from 'react-router-dom'
+import { auth } from '../firebase'
 
 import useModal from '../hooks/useModal'
 
 const useUser = () => {
   const [user, setUser] = useState(null)
   useEffect(() => {
-    const subscription = firebase.auth().onAuthStateChanged(user => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
       setUser(user || null)
     })
 
     return () => {
-      subscription.unsubscribe()
+      unsubscribe()
     }
   }, [])
 
@@ -21,15 +22,19 @@ const useUser = () => {
 const Profile = () => {
   const user = useUser()
 
+  const history = useHistory()
+
   const showMessage = useModal()
 
   const handleSignout = async () => {
     try {
-      await firebase.auth().signOut()
+      await auth.signOut()
     } catch (err) {
       showMessage('Error al cerrar sesion')
       return
     }
+
+    history.push('/login')
   }
 
   const handleVerifyEmail = () => {

@@ -1,7 +1,8 @@
 import React from 'react'
 import { Formik, Field } from 'formik'
 import * as Yup from 'yup'
-import * as firebase from 'firebase/app'
+import { useHistory } from 'react-router-dom'
+import { auth } from '../firebase'
 
 import useModal from '../hooks/useModal'
 import Form from './Form'
@@ -20,10 +21,12 @@ const validationSchema = Yup.object({
 const LoginForm = () => {
   const showMessage = useModal()
 
+  const history = useHistory()
+
   const handleSubmit = async (values, {setSubmitting}) => {
     const { email, password } = values
     try {
-      await firebase.auth().signInWithEmailAndPassword(email, password)
+      await auth().signInWithEmailAndPassword(email, password)
     } catch (err) {
       showMessage(`Error al iniciar sesion: code ${err.code}, message ${err.message}`)
       return
@@ -32,6 +35,7 @@ const LoginForm = () => {
     }
 
     showMessage('Inicio de sesion exitoso')
+    history.push('/profile')
   }
 
   return (

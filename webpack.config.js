@@ -8,11 +8,11 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: 'index.bundle.js'
   },
-  devtool: 'eval',
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
     compress: true,
-    port: 9000
+    port: 9000,
+    historyApiFallback: true,
   },
   module: {
     rules: [
