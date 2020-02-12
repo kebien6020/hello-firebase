@@ -26,7 +26,7 @@ const LoginForm = () => {
   const handleSubmit = async (values, {setSubmitting}) => {
     const { email, password } = values
     try {
-      await auth().signInWithEmailAndPassword(email, password)
+      await auth.signInWithEmailAndPassword(email, password)
     } catch (err) {
       showMessage(`Error al iniciar sesion: code ${err.code}, message ${err.message}`)
       return
