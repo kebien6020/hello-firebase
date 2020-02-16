@@ -1,5 +1,6 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   mode: 'development',
@@ -30,7 +31,10 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx'],
   },
-  plugins: [ new HtmlWebpackPlugin({
-    template: path.join(__dirname, 'src/index.ejs'),
-  }) ],
+  plugins: [
+	  new HtmlWebpackPlugin({
+      template: path.join(__dirname, 'src/index.ejs'),
+    }),
+    new CopyPlugin([{from: 'public/*', to: '[name].[ext]'}]),
+  ],
 }

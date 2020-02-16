@@ -7,8 +7,8 @@ import * as firebase from 'firebase/app'
 // Add the Firebase products that you want to use
 import 'firebase/auth'
 import 'firebase/firestore'
+import 'firebase/messaging'
 
-// TODO: Replace the following with your app's Firebase project configuration
 const firebaseConfig = {
   apiKey: 'AIzaSyAir6Y5ABvu_2fO3GsUBKjGjBKM4YEu3t4',
   authDomain: 'hello-firebase-b178a.firebaseapp.com',
@@ -24,5 +24,41 @@ firebase.initializeApp(firebaseConfig)
 
 const auth = firebase.auth()
 const db = firebase.firestore()
+const messaging = (() => {
+  if (firebase.messaging.isSupported()) {
+    return firebase.messaging()
+  }
 
-export { firebase, auth, db }
+  return null
+})()
+
+const setupMessaging = async () => {
+  if (messaging) {
+    messaging.usePublicVapidKey('BIX-hxgox44qDJKIHbBkNTpOs-zcfgltx0BetMkrL7vvFOar1gQBV2JUQkZk8RRK3S5THND2ZPb6L65z12xLH38')
+  
+    try {
+      await messaging.requestPermission()
+    } catch (err) {
+      console.warn('Permission denied')
+      return
+    }
+
+    console.log('Have permission')
+    try {
+      const token = await messaging.getToken()
+      console.log(token)
+    } catch (err) {
+      console.error('Error getting token')
+    }
+  }
+
+}
+
+setupMessaging()
+
+messaging.onMessage(payload => {
+  console.log('onMessage: ', payload)
+})
+
+
+export { firebase, auth, db, messaging }
